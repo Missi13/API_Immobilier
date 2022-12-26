@@ -120,6 +120,9 @@ public class UserService {
         if (userDTO.getEmail() != null) {
             newUser.setEmail(userDTO.getEmail().toLowerCase());
         }
+        if (userDTO.getDateOfBirth() != null) {
+            newUser.setDateOfBirth(userDTO.getDateOfBirth());
+        }
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
