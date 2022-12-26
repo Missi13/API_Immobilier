@@ -5,6 +5,7 @@ import com.immobilier.domain.Authority;
 import com.immobilier.domain.User;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.*;
@@ -32,6 +33,8 @@ public class AdminUserDTO implements Serializable {
     @Email
     @Size(min = 5, max = 254)
     private String email;
+
+    private LocalDate dateOfBirth;
 
     @Size(max = 256)
     private String imageUrl;
@@ -111,6 +114,14 @@ public class AdminUserDTO implements Serializable {
         this.email = email;
     }
 
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -183,6 +194,7 @@ public class AdminUserDTO implements Serializable {
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
+            ", dateOfBirth=" + dateOfBirth +
             ", imageUrl='" + imageUrl + '\'' +
             ", activated=" + activated +
             ", langKey='" + langKey + '\'' +
