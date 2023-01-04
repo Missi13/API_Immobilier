@@ -128,6 +128,7 @@ public class UserService {
         // check date
         checkDateOfBirth(userDTO.getDateOfBirth());
         newUser.setDateOfBirth(userDTO.getDateOfBirth());
+        newUser.setPhoneNumber(userDTO.getPhoneNumber());
         newUser.setGender(userDTO.getGender());
         newUser.setAccountType(userDTO.getAccountType());
         newUser.setImageUrl(userDTO.getImageUrl());
