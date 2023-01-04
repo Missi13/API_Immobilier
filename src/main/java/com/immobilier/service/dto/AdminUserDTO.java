@@ -3,11 +3,16 @@ package com.immobilier.service.dto;
 import com.immobilier.config.Constants;
 import com.immobilier.domain.Authority;
 import com.immobilier.domain.User;
+import com.immobilier.domain.enumeration.AccountType;
+import com.immobilier.domain.enumeration.GenderType;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 
 /**
@@ -34,7 +39,14 @@ public class AdminUserDTO implements Serializable {
     @Size(min = 5, max = 254)
     private String email;
 
+    private String phoneNumber;
+
     private LocalDate dateOfBirth;
+
+    private GenderType gender;
+
+    @NotNull
+    private AccountType accountType;
 
     @Size(max = 256)
     private String imageUrl;
@@ -64,6 +76,10 @@ public class AdminUserDTO implements Serializable {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
+        this.phoneNumber = user.getPhoneNumber();
+        this.dateOfBirth = user.getDateOfBirth();
+        this.accountType = user.getAccountType();
+        this.gender = user.getGender();
         this.activated = user.isActivated();
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
@@ -114,12 +130,36 @@ public class AdminUserDTO implements Serializable {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public GenderType getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderType gender) {
+        this.gender = gender;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
     }
 
     public String getImageUrl() {
