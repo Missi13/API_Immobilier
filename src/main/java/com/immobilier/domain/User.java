@@ -13,10 +13,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.immobilier.domain.enumeration.AccountType;
+import com.immobilier.domain.enumeration.GenderType;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.usertype.UserType;
 
 /**
  * A user.
@@ -60,6 +64,14 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private GenderType gender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_type")
+    private AccountType accountType;
 
     @NotNull
     @Column(nullable = false)
@@ -154,6 +166,22 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public GenderType getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderType gender) {
+        this.gender = gender;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -236,6 +264,8 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
             ", dateOfBirth=" + dateOfBirth + '\'' +
+            ", gender=" + gender + '\'' +
+            ", accountType=" + accountType + '\'' +
             ", imageUrl='" + imageUrl + '\'' +
             ", activated='" + activated + '\'' +
             ", langKey='" + langKey + '\'' +

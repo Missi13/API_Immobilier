@@ -3,6 +3,7 @@ package com.immobilier.service;
 import com.immobilier.config.Constants;
 import com.immobilier.domain.Authority;
 import com.immobilier.domain.User;
+import com.immobilier.domain.enumeration.AccountType;
 import com.immobilier.repository.AuthorityRepository;
 import com.immobilier.repository.UserRepository;
 import com.immobilier.security.AuthoritiesConstants;
@@ -10,9 +11,13 @@ import com.immobilier.security.SecurityUtils;
 import com.immobilier.service.dto.AdminUserDTO;
 import com.immobilier.service.dto.UserDTO;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import com.immobilier.web.rest.errors.BadRequestAlertException;
+import com.immobilier.web.rest.errors.ErrorConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -120,9 +125,11 @@ public class UserService {
         if (userDTO.getEmail() != null) {
             newUser.setEmail(userDTO.getEmail().toLowerCase());
         }
-        if (userDTO.getDateOfBirth() != null) {
-            newUser.setDateOfBirth(userDTO.getDateOfBirth());
-        }
+        // check date
+        checkDateOfBirth(userDTO.getDateOfBirth());
+        newUser.setDateOfBirth(userDTO.getDateOfBirth());
+        newUser.setGender(userDTO.getGender());
+        newUser.setAccountType(userDTO.getAccountType());
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
@@ -130,12 +137,24 @@ public class UserService {
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        //set authorities
+        if (Objects.equals(userDTO.getAccountType(), AccountType.OWNER)) {
+            authorityRepository.findById(AuthoritiesConstants.OWNER).ifPresent(authorities::add);
+        }
+        if (Objects.equals(userDTO.getAccountType(), AccountType.RENTER)) {
+            authorityRepository.findById(AuthoritiesConstants.RENTER).ifPresent(authorities::add);
+        }
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
+    }
+
+    private void checkDateOfBirth(LocalDate dateOfBirth) {
+        if(dateOfBirth.isAfter(LocalDate.now())) {
+            throw new BadRequestAlertException("invalid date", "", ErrorConstants.INVALID_DATE);
+        }
     }
 
     private boolean removeNonActivatedUser(User existingUser) {
